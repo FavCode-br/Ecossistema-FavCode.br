@@ -1,0 +1,15 @@
+{
+  "name": "favcode-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "FavCode — plataforma de membros e ecossistema (protótipo estático)",
+  "scripts": {
+    "dev": "node serve.js",
+    "start": "node serve.js",
+    "lint": "node --check serve.js && node --check assets/js/brand.js && node --check assets/js/icons.js && node --check assets/js/data.js && node --check assets/js/app.js",
+    "build": "npm run lint && node -e \"console.log('Site estático: nenhum passo de build necessário. Saída = raiz do projeto.')\""
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
