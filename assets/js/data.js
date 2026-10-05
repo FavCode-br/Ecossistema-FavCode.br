@@ -6,9 +6,18 @@ const CATEGORIES = {
   ia:         { label: "IA & Automação", short: "IA & Automação" },
 };
 
+/*
+ * Configuração de acesso do protótipo.
+ * demoMode: abre a plataforma direto com o usuário demo, sem login.
+ * authRequired: quando true, rotas internas exigem sessão e redirecionam para #/login.
+ * Para reativar o login no futuro: demoMode = false, authRequired = true.
+ */
+const APP = { version: "0.2.0", demoMode: true, authRequired: false };
+
+/* Usuário demo (PRO para liberar a visualização de todas as áreas). */
 const USER = {
-  name: "Matheus Lima", first: "Matheus", initials: "ML", role: "Desenvolvedor Web & Automação",
-  city: "Belo Horizonte, MG", coins: 2480, level: 12, levelName: "Construtor", xp: 7340, xpNext: 8000,
+  name: "Visitante FavCode", first: "Visitante", initials: "VF", slug: "visitante-favcode", role: "Desenvolvedor Web & Automação",
+  city: "Brasil", coins: 1250, level: 7, levelName: "Construtor", xp: 3850, xpNext: 5000,
   streak: 9, plan: "PRO", hoursMonth: 14.5, lessonsWeek: 11, certificates: 4,
 };
 

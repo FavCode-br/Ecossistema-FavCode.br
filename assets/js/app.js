@@ -9,6 +9,13 @@ const store = {
   set(key, value) { try { localStorage.setItem(`fc:${key}`, JSON.stringify(value)); } catch { /* storage indisponível */ } },
 };
 const fmt = (n) => n.toLocaleString("pt-BR");
+
+/* Sessão simulada (localStorage). Sem backend: no modo demo ela é criada automaticamente. */
+const session = {
+  current() { return store.get("session", null); },
+  start(user = USER) { store.set("session", { name: user.name, plan: user.plan, demo: APP.demoMode, startedAt: Date.now() }); },
+  end() { try { localStorage.removeItem("fc:session"); } catch { /* storage indisponível */ } },
+};
 const courseById = (id) => COURSES.find((c) => c.id === id);
 
 /* ---- Navegação ---------------------------------------------------------- */
@@ -65,6 +72,9 @@ function ring(value, { size = 112, stroke = 8, label = "", sub = "" } = {}) {
 }
 
 function catTag(cat) { return `<span class="cat-tag" data-cat="${cat}">${CATEGORIES[cat].label}</span>`; }
+function demoNote() {
+  return APP.demoMode ? `<p class="demo-note"><span class="badge badge-outline">Modo Demo</span>FavCode Prototype v${APP.version}</p>` : "";
+}
 function proBadge() { return `<span class="badge badge-pro">${fcSymbol({ size: 8 })} PRO</span>`; }
 
 function courseCard(c) {
@@ -506,10 +516,11 @@ VIEWS.curriculo = () => `<div class="page">
         </section>
         <section class="card resume-section"><h2>Perfil público</h2>
           <p style="font-size:var(--fs-sm)">Link pronto para enviar a empresas e clientes.</p>
-          <div class="share-box"><span>favcode.com.br/p/matheus-lima</span><button class="btn btn-secondary btn-sm" data-copy>${icon("link", 14)} Copiar</button></div>
+          <div class="share-box"><span>favcode.com.br/p/${USER.slug}</span><button class="btn btn-secondary btn-sm" data-copy>${icon("link", 14)} Copiar</button></div>
         </section>
       </div>
     </div>
+    ${demoNote()}
   </div>
 </div>`;
 
@@ -521,7 +532,7 @@ VIEWS.login = () => `<div class="login">
     <span class="tagline">TESTOU. FUNCIONOU. FAVORITOU.</span>
   </div>
   <div class="login-form-wrap">
-    <form class="login-form" onsubmit="event.preventDefault(); location.hash = '#/home';">
+    <form class="login-form" onsubmit="event.preventDefault(); session.start(); location.hash = '#/home';">
       <div class="login-mobile-brand">${fcLockup({ size: 30 })}</div>
       <h1>Bem-vindo de volta</h1>
       <p>Entre para continuar de onde parou.</p>
@@ -530,7 +541,8 @@ VIEWS.login = () => `<div class="login">
       <div class="login-row"><label><input type="checkbox" checked> Manter conectado</label><a class="link" href="#/login">Esqueci a senha</a></div>
       <button class="btn btn-brand btn-lg btn-block" type="submit">Entrar</button>
       <div class="divider-text">ou</div>
-      <button class="btn btn-secondary btn-lg btn-block" type="button" onclick="location.hash='#/home'">Entrar com link mágico</button>
+      <button class="btn btn-secondary btn-lg btn-block" type="button" onclick="session.start(); location.hash='#/home'">Entrar com link mágico</button>
+      ${demoNote()}
     </form>
   </div>
 </div>`;
@@ -646,6 +658,12 @@ function parseRoute() {
 
 function render() {
   const { route, params } = parseRoute();
+  if (route === "login") {
+    session.end();
+  } else if (!session.current()) {
+    if (APP.authRequired) { location.replace("#/login"); return; }
+    if (APP.demoMode) session.start();
+  }
   if (route === "mentorias" && params.get("tab")) store.set("mentorTab", params.get("tab"));
   const collapsed = store.get("collapsed", false);
 
@@ -693,7 +711,7 @@ document.addEventListener("click", (e) => {
   } else if (t.matches("[data-save]")) {
     t.classList.toggle("is-on");
   } else if (t.matches("[data-copy]")) {
-    try { navigator.clipboard.writeText("https://favcode.com.br/p/matheus-lima"); } catch { /* sem clipboard */ }
+    try { navigator.clipboard.writeText(`https://favcode.com.br/p/${USER.slug}`); } catch { /* sem clipboard */ }
     t.innerHTML = `${icon("check", 14)} Copiado`;
     setTimeout(() => { t.innerHTML = `${icon("link", 14)} Copiar`; }, 1600);
   } else if (t.matches("[data-complete]")) {

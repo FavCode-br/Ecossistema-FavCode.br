@@ -75,7 +75,17 @@ Todo o conteúdo (usuário, cursos, trilhas, posts, vagas, mentores, FavCoins) e
 | MEMBER | Catálogo completo, trilhas, certificados, comunidade, oportunidades e FavCoins |
 | PRO | Tudo do MEMBER, mais Área VIP, lives e hot seats, mentorias com o selo FavCode PRO e destaque em oportunidades |
 
-No protótipo, o usuário logado é **PRO** (`USER.plan` em `data.js`). Os selos PRO e o acesso dos mentores (`access: "PRO" | "Todos"`) já estão na interface. O bloqueio real por nível depende do back-end.
+### Modo demo (acesso público)
+
+Quem abre o link entra direto na Home como **Visitante FavCode (PRO)**, sem login. A sessão demo é criada automaticamente no `localStorage`. A configuração fica em `APP`, no topo de `data.js`:
+
+```js
+const APP = { version: "0.2.0", demoMode: true, authRequired: false };
+```
+
+Para reativar o login, use `demoMode: false, authRequired: true`: as rotas internas passam a redirecionar para `#/login`. A tela de login continua acessível em `#/login`, ou pelo item "Sair".
+
+No protótipo, o usuário demo é **PRO** (`USER.plan` em `data.js`). Os selos PRO e o acesso dos mentores (`access: "PRO" | "Todos"`) já estão na interface. O bloqueio real por nível depende do back-end.
 
 ## Integrações futuras
 

@@ -570,6 +570,7 @@ img, svg { display: block; }
 .cert strong { display: block; font-weight: 600; font-size: 0.85rem; }
 .cert span { font-size: var(--fs-xs); color: var(--text-muted); }
 .share-box { display: flex; align-items: center; gap: var(--sp-2); padding: 6px 6px 6px var(--sp-3); margin-top: var(--sp-4); border-radius: var(--r-pill); background: rgba(255,255,255,.035); border: 1px solid var(--border-subtle); font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); }
+.demo-note { display: flex; align-items: center; justify-content: center; gap: var(--sp-2); margin-top: var(--sp-8); font-size: var(--fs-xs); color: var(--text-muted); }
 .share-box span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ==========================================================================
